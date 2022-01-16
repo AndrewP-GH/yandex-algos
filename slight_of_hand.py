@@ -1,16 +1,16 @@
-# ID 63937226
+# ID 63940599
 
 import sys
+from collections import defaultdict
 
 
 def main():
     k = int(input())
-    field_stat = {}
-    for row in range(0, 4):
-        line = sys.stdin.readline()
-        for col in range(0, 4):
-            n = line[col]
-            field_stat[n] = field_stat.get(n, 0) + 1
+    field_stat = defaultdict(int)
+    for row in range(4):
+        line = sys.stdin.readline().rstrip()
+        for ch in line:
+            field_stat[ch] += 1
     kk = 2*k
     points = 0
     for k, v in field_stat.items():

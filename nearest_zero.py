@@ -1,4 +1,4 @@
-# ID 63938506
+# ID 63940476
 
 import sys
 
@@ -8,7 +8,7 @@ def main():
     line = sys.stdin.readline().split()
     result = [n] * n
     begin = 0
-    for i in range(0, n):
+    for i in range(n):
         if line[i] == '0':
             fill_left(i, begin, result)
             begin = i
@@ -28,7 +28,7 @@ def fill_left(i, begin, result):
             distance += 1
             i -= 1
         else:
-            return
+            break
 
 
 def fill_right(i, end, result):
@@ -39,9 +39,9 @@ def fill_right(i, end, result):
             distance += 1
             i += 1
         else:
-            return
+            break
 
 
 if __name__ == '__main__':
     arr = main()
-    print(' '.join(map(str, arr)))
+    print(' '.join(map(str, arr)))  # с *arr на 0.3s медленнее :(
