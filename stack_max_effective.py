@@ -7,30 +7,30 @@ class Node:
 
 class StackMax:
     def __init__(self):
-        self.maximum = []
-        self.head = None
+        self._maximum = []
+        self._head = None
 
     def push(self, value):
         is_max = False
-        if self.head is None or self.maximum[-1] <= value:
+        if self._head is None or self._maximum[-1] <= value:
             is_max = True
-            self.maximum.append(value)
-        node = Node(value, self.head, is_max)
-        self.head = node
+            self._maximum.append(value)
+        node = Node(value, self._head, is_max)
+        self._head = node
 
     def pop(self):
-        if self.head is None:
+        if self._head is None:
             return None, 'error'
-        node = self.head
-        self.head = self.head.prev
+        node = self._head
+        self._head = self._head.prev
         if node.is_max:
-            del self.maximum[-1]
+            del self._maximum[-1]
         return node.value, None
 
     def get_max(self):
-        if self.head is None:
+        if self._head is None:
             return None, 'None'
-        return self.maximum[-1], None
+        return self._maximum[-1], None
 
 
 def main():
