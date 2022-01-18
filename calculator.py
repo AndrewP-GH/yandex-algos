@@ -46,7 +46,6 @@ def main():
             elif ch == '/':
                 res = a // b
             stack.push(res)
-        print(f'{stack}')
     print(stack.pop())
 
 
