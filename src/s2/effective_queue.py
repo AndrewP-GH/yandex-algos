@@ -1,17 +1,16 @@
 import sys
 
 
-class Node:
-    def __init__(self, value, next_node=None):
-        self.value = value
-        self.next = next_node
-
-
 class Queue:
     def __init__(self):
         self._head = None
         self._size = 0
         self._tail = None
+
+    class Node:
+        def __init__(self, value, next_node=None):
+            self.value = value
+            self.next = next_node
 
     def get(self):
         if self._size == 0:
@@ -22,7 +21,7 @@ class Queue:
         return res
 
     def put(self, value):
-        node = Node(value)
+        node = self.Node(value)
         if self._size == 0:
             self._head = self._tail = node
         else:
