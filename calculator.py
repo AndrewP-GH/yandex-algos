@@ -6,14 +6,6 @@ class Stack:
         self._head = None,
         self._size = 0
 
-    def __str__(self):
-        cur = self._head
-        result = ""
-        while cur:
-            result += str(cur.value) + ' -> '
-            cur = cur.prev
-        return result[:-5]
-
     class Node:
         def __init__(self, value, prev=None):
             self.value = value
