@@ -1,7 +1,7 @@
 import sys
 
 
-class Node:
+class StackItem:
     def __init__(self, value, prev=None):
         self.value = value
         self.prev = prev
@@ -13,7 +13,7 @@ class Stack:
         self._size = 0
 
     def push(self, value):
-        node = Node(value, self._head)
+        node = StackItem(value, self._head)
         self._head = node
         self._size += 1
 
