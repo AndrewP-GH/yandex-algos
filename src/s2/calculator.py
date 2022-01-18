@@ -1,18 +1,19 @@
 import sys
 
 
+class Node:
+    def __init__(self, value, prev=None):
+        self.value = value
+        self.prev = prev
+
+
 class Stack:
     def __init__(self):
         self._head = None,
         self._size = 0
 
-    class Node:
-        def __init__(self, value, prev=None):
-            self.value = value
-            self.prev = prev
-
     def push(self, value):
-        node = self.Node(value, self._head)
+        node = Node(value, self._head)
         self._head = node
         self._size += 1
 

@@ -1,20 +1,21 @@
+class Node:
+    def __init__(self, value, prev=None, is_max=False):
+        self.value = value
+        self.prev = prev
+        self.is_max = is_max
+
+
 class StackMax:
     def __init__(self):
         self._maximum = []
         self._head = None
-
-    class Node:
-        def __init__(self, value, prev=None, is_max=False):
-            self.value = value
-            self.prev = prev
-            self.is_max = is_max
 
     def push(self, value):
         is_max = False
         if self._head is None or self._maximum[-1] <= value:
             is_max = True
             self._maximum.append(value)
-        node = self.Node(value, self._head, is_max)
+        node = Node(value, self._head, is_max)
         self._head = node
 
     def pop(self):
