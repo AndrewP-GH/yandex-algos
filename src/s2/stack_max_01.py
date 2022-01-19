@@ -83,6 +83,7 @@ class Stack:
             else:
                 print("Top Most Element Removed : {}".format(removed_node))
 
+
 def main():
     stack = Stack()
     stack.push(3)
@@ -98,4 +99,4 @@ def main():
 
 
 if __name__ == '__main__':
-        main()
+    main()
