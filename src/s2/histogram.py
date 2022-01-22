@@ -9,7 +9,7 @@ def main():
     for i in range(1, n):
         calculate(i, stack, h, left, -1)
     stack.clear()
-    stack = [n-1]
+    stack = [n - 1]
     for i in range(n - 2, -1, -1):
         calculate(i, stack, h, right, n)
     print(f'left: {left}')
@@ -18,7 +18,8 @@ def main():
     for i in range(n):
         s[i] = h[i] * (right[i] - left[i] - 1)
     print(f'S: {s}')
-    print(f'MAX: {s.index(max(s))}')
+    m = max(s)
+    print(f'MAX: {[i for i, x in enumerate(s) if x == m]}')
 
 
 def calculate(i, stack, h, arr, bound):
