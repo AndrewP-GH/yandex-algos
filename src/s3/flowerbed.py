@@ -1,5 +1,5 @@
-def flowerbed(n, array):
-    array.sort()
+def flowerbad(n, array):
+    array.sort(key=lambda x: (x[0], x[1]))
     result = []
     (left, right) = array[0]
     for i in range(1, n):
@@ -19,6 +19,6 @@ if __name__ == '__main__':
     for i in range(n):
         parts = input().rstrip().split()
         pieces[i] = (int(parts[0]), int(parts[1]))
-    result = flowerbed(n, pieces)
+    result = flowerbad(n, pieces)
     for tuple in result:
         print(tuple[0], tuple[1])
