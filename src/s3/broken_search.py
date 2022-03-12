@@ -24,9 +24,9 @@ def find_pivot(array, low, high) -> int:
     if high == low:
         return low
     mid = (low + high) // 2
-    if mid < high and array[mid] > array[mid + 1]:
+    if mid < high and array[mid] > array[mid + 1]:  # проверяем на границы, прежде чем сравнивать с +1
         return mid
-    if mid > low and array[mid] < array[mid - 1]:
+    if mid > low and array[mid] < array[mid - 1]:   # проверяем на границы, прежде чем сравнивать с -1
         return mid - 1
     if array[low] >= array[mid]:
         return find_pivot(array, low, mid - 1)
