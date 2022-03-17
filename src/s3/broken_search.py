@@ -5,6 +5,13 @@
 # 3. Если нашли -> проверяем не искомый ли это элемент,
 # 4. Если нет -> проверяем левую границу, чтобы понят, в каком из двух подмассивов надо искать
 # 5. Ищем в нужном подмассиве бинарным поиском.
+# Оценка сложности:
+# функция find_pivot имеет в среднем и худшем случаях сложность O(log(n)),
+# потому что это операция "бинарного поиска" (каждый раз делим пополам) и O(1) в лучшем;
+# функция broken_search в худшем и среднем случае имеет сложность O(log(n)), в лучшем случае O(1),
+# поэтому итоговая сложность алгоритма O(log(n)).
+from bisect import bisect_left
+
 
 def broken_search(nums, target) -> int:
     n = len(nums)
@@ -18,32 +25,27 @@ def broken_search(nums, target) -> int:
     return binary_search(nums, target, pivot + 1, n - 1)
 
 
-def find_pivot(array, low, high) -> int:
-    if high < low:
-        return -1
-    if high == low:
-        return low
-    mid = (low + high) // 2
-    if mid < high and array[mid] > array[mid + 1]:  # проверяем на границы, прежде чем сравнивать с +1
-        return mid
-    if mid > low and array[mid] < array[mid - 1]:   # проверяем на границы, прежде чем сравнивать с -1
-        return mid - 1
-    if array[low] >= array[mid]:
-        return find_pivot(array, low, mid - 1)
-    if array[mid] >= array[high]:
-        return find_pivot(array, mid + 1, high)
+def binary_search(array, target, low, high):
+    result = bisect_left(array, target, low, high)
+    if result != len(array) and array[result] == target:
+        return result
     return -1
 
 
-def binary_search(array, target, low, high):
-    if high < low:
+def find_pivot(array, low, high) -> int:
+    if array[low] < array[high]:
         return -1
-    mid = (low + high) // 2
-    if array[mid] == target:
-        return mid
-    if array[mid] > target:
-        return binary_search(array, target, low, mid - 1)
-    return binary_search(array, target, mid + 1, high)
+    while low < high:
+        mid = (low + high) // 2
+        if mid < high and array[mid] > array[mid + 1]:  # проверяем на границы, прежде чем сравнивать с +1
+            return mid
+        if mid > low and array[mid] < array[mid - 1]:  # проверяем на границы, прежде чем сравнивать с -1
+            return mid - 1
+        if array[low] >= array[mid]:
+            high = mid - 1
+        elif array[mid] >= array[high]:
+            low = mid + 1
+    return low
 
 
 def test():
