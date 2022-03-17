@@ -2,27 +2,34 @@
 # Алгоритм работы сортировки:
 # 1. Для выбора опорного элемента и сортировки используем схему Хоара
 # - берем средний элемент
-# - идем с начала и конца по массиву и переставляем элементы так, чтобы те, которые меньше опорного оказались слева от него,
-# а те, что больше, спарва от него
+# - идем с начала и конца по массиву и переставляем элементы так, чтобы те, которые меньше опорного оказались слева,
+# а те, что больше, справа от него
 # 2. Применяем сортировку к левому и правому подмассивам
+# Сложность:
+# Функция partition работает за O(n) и не требует дополнительной памяти
+# Поэтому функция efficient_quicksort работает за O(n*log n): на каждом шаге рекурсии мы вызываем функцию partition,
+# делим массив на 2 подмассива и вызываем efficient_quicksort на них.
+# В худшем случае, если массив отсортирован по возрастанию, будет n вызовов функции partition O(n) и итоговая
+# сложност будет O(n^2)
+# Сложность по памяти: дополнительной памяти (кроме памяти под сам массив) не требуется, поэтому она равна O(1).
 import sys
 
 
-def efficient_quicksort(array, left, right, comparator):
+def efficient_quicksort(array, left, right):
     if right - left < 1:
         return
-    pivot_idx = partition(array, left, right, comparator)
-    efficient_quicksort(array, left, pivot_idx, comparator)
-    efficient_quicksort(array, pivot_idx + 1, right, comparator)
+    pivot_idx = partition(array, left, right)
+    efficient_quicksort(array, left, pivot_idx)
+    efficient_quicksort(array, pivot_idx + 1, right)
 
 
-def partition(array, left, right, comparator):
+def partition(array, left, right):
     mid_idx = (left + right) // 2
     pivot = array[mid_idx]
     while True:
-        while comparator(array[left], pivot):
+        while array[left] < pivot:
             left += 1
-        while comparator(pivot, array[right]):
+        while pivot < array[right]:
             right -= 1
         if left >= right:
             return right
@@ -31,20 +38,26 @@ def partition(array, left, right, comparator):
         right -= 1
 
 
-def compare(left, right):
-    if left[1] != right[1]:
-        return left[1] > right[1]
-    if left[2] != right[2]:
-        return left[2] < right[2]
-    return left[0] < right[0]
+class Intern:
+    def __init__(self, login, tasks, fine):
+        self.login = login
+        self.tasks = tasks
+        self.fine = fine
+
+    def __lt__(self, other):
+        if self.tasks != other.tasks:
+            return self.tasks > other.tasks
+        if self.fine != other.fine:
+            return self.fine < other.fine
+        return self.login < other.login
 
 
 if __name__ == "__main__":
     number = int(input())
-    participants = [None] * number
+    participants = [Intern] * number
     for i in range(number):
         parts = sys.stdin.readline().rstrip().split()
-        participants[i] = (parts[0], int(parts[1]), int(parts[2]))
-    efficient_quicksort(participants, 0, number - 1, compare)
+        participants[i] = Intern(parts[0], int(parts[1]), int(parts[2]))
+    efficient_quicksort(participants, 0, number - 1)
     for p in participants:
-        print(p[0])
+        print(p.login)
