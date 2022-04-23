@@ -1,10 +1,11 @@
-# Отчет 67654452: https://contest.yandex.ru/contest/24414/run-report/67654452/
+# Отчет 67705993: https://contest.yandex.ru/contest/24414/run-report/67705993/
 # Алгоритм работы:
 # 1) Внутренний размер таблицы задается как большое простое число с википедии
 # 2) Для устранения коллизий используется связный список (со вставкой в начало)
 # Сложность операций в такой структуре данных O(1) (считаем коллизии, из-за которых приходится ходить по списку
-# редкими)
+# и сравнивать между собой строки за O(n*m) редкимиб где n - кол-во слов, а m- кол-во символов в слове)
 # Сложность по памяти O(n) (по количеству элементов в таблице)
+# Суммарное время работы: O(n), где n - кол-во операций (get, put, delete) с хеш-таблицей
 
 class FixedHashTable(object):
     class Node(object):
@@ -22,7 +23,7 @@ class FixedHashTable(object):
 
     @staticmethod
     def __get_value(node):
-        return node.value if node else None
+        return (True, node.value) if node else (False, None)
 
     def put(self, key, value):
         key_hash = self.__hashing(key)
@@ -63,17 +64,19 @@ class FixedHashTable(object):
         return self.__get_value(node)
 
 
+def print_result(result):
+    print(result[1]) if result[0] else print('None')
+
+
 def simple_hash_table():
     ht = FixedHashTable(514229)
     n = int(input())
     for _ in range(n):
         command = input().split()
         try:
-            if command[0] == 'put':
-                ht.put(command[1], command[2])
-            else:
-                res = getattr(ht, command[0])(*command[1:])
-                print(res) if res else print('None')
+            result = getattr(ht, command[0])(*command[1:])
+            if result:
+                print_result(result)
         except ValueError:
             print('error')
 
