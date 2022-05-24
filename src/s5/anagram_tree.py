@@ -15,6 +15,8 @@ def is_anagram(root) -> bool:
         return True
     if root.left is None and root.right is None:
         return True
+    if root.left is None or root.right is None:
+        return False
     left_order = []
     traverse(root.left, left_order, True)
     right_order = []
@@ -23,9 +25,9 @@ def is_anagram(root) -> bool:
 
 
 def traverse(root, order_list, l_to_r):
+    order_list.append(root.value if root else None)
     if root is None:
         return
-    order_list.append(root.value)
     if l_to_r:
         traverse(root.left, order_list, l_to_r)
         traverse(root.right, order_list, l_to_r)
