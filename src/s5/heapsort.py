@@ -41,11 +41,11 @@ class Heap:
         self.array = array
         self.size = size
 
-    def __getitem__(self, i):
-        return self.array[i]
+    def __getitem__(self, idx):
+        return self.array[idx]
 
-    def __setitem__(self, i, value):
-        self.array[i] = value
+    def __setitem__(self, idx, value):
+        self.array[idx] = value
 
     def __len__(self):
         return self.size
@@ -107,9 +107,9 @@ def sift_down(heap: Heap, idx):
 if __name__ == '__main__':
     n = int(input())
     participants = [None] * n
-    for i in range(n):
+    for row in range(n):
         line = sys.stdin.readline().rstrip().split()
-        participants[i] = Participant(line[0], int(line[1]), int(line[2]))
+        participants[row] = Participant(line[0], int(line[1]), int(line[2]))
     winners = heapsort(participants)
     for participant in winners:
         print(participant.name)
