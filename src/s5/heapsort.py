@@ -8,16 +8,17 @@
 #
 # В качестве реализации кучи взял простой массив с отдельным параметром "размер", чтобы избегать лишних аллокаций.
 #
-# Сложность по памяти O(n). Фактически 3*n - начальные данные, куча, результат, где n - число участников (строка и
-#   2 числа).
-#
-# Сложность по времени O(n*log(n)):
-# - вставка в кучу: O(log(n)),
-# - извлечение из кучи: O(log(n)),
-# - эти операции надо выполнить над каждым элементом входного массива, получаем O(2n*log(n)) -> O(n*log(n))
+# Сложность по памяти O(n*m). Фактически 3*n*m - начальные данные, куча, результат, где n - число участников (строка и
+#   2 числа), m - размер строки с именем.
 #
 # В реализации алгоритма память под массивы выделяется заранее, поэтому доп аллокаций во время итераций не происходит и
-# на итоговую сложность они не оказывают влияния.
+#   на итоговую сложность они не оказывают влияния.
+#
+# Сложность по времени O(n*log(n)):
+# - вставка в кучу: O(log(n)) (здесь и далее я не учитываю сложность сравнения строк, потому что это поле используется
+#   последним в списке сравнения),
+# - извлечение из кучи: O(log(n)),
+# - эти операции надо выполнить над каждым элементом входного массива, получаем O(2n*log(n)) -> O(n*log(n))#
 
 import sys
 
@@ -72,12 +73,14 @@ def heap_add(heap: Heap, item):
 
 
 def sift_up(heap: [], idx):
-    if idx == 1:
-        return idx
-    parent = idx // 2
-    if heap[parent] < heap[idx]:
+    def parent_idx(i):
+        return i // 2
+
+    parent = parent_idx(idx)
+    while idx > 1 and heap[parent] < heap[idx]:
         heap[parent], heap[idx] = heap[idx], heap[parent]
-        return sift_up(heap, parent)
+        idx = parent
+        parent = parent_idx(idx)
     return idx
 
 
@@ -90,17 +93,19 @@ def heap_get_max_priority(heap: Heap):
 
 
 def sift_down(heap: Heap, idx):
-    left = idx * 2
-    right = idx * 2 + 1
-    if heap.size <= left:  # нет дочерних узлов
-        return idx
-    if right < heap.size and heap[left] < heap[right]:
-        largest = right
-    else:
-        largest = left
-    if heap[idx] < heap[largest]:
-        heap[idx], heap[largest] = heap[largest], heap[idx]
-        return sift_down(heap, largest)
+    def children_idx(i):
+        return i * 2, i * 2 + 1
+
+    left, right = children_idx(idx)
+    while heap.size > left:
+        if right < heap.size and heap[left] < heap[right]:
+            largest = right
+        else:
+            largest = left
+        if heap[idx] < heap[largest]:
+            heap[idx], heap[largest] = heap[largest], heap[idx]
+        idx = largest
+        left, right = children_idx(idx)
     return idx
 
 
