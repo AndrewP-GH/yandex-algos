@@ -1,4 +1,4 @@
-# Отчет https://contest.yandex.ru/contest/24810/run-report/68628116/
+# Отчет https://contest.yandex.ru/contest/24810/run-report/68639488/
 #
 # Сортировка состоит из 2-ч частей:
 # 1. Вставляю в max-кучу
