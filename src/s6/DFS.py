@@ -40,4 +40,4 @@ if __name__ == '__main__':
         edges[v].append(u)
     s = int(input())
     result = main_dfs(edges, s)
-    print(' '.join(map(str, result)))
+    print_res(result)
