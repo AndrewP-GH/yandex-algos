@@ -1,30 +1,37 @@
 from collections import defaultdict
+from enum import Enum
+
+
+class Color(Enum):
+    WHITE = 1
+    GRAY = 2
+    BLACK = 3
 
 
 def main_dfs(edges, s):
-    processed = [None] * (n + 1)
+    colors = [Color.WHITE] * (n + 1)
     entry = [None] * (n + 1)
     leave = [None] * (n + 1)
-    dfs(edges, s, processed, entry, leave)
+    dfs(edges, s, colors, entry, leave)
     return entry, leave
 
 
-def dfs(edges, s, processed, entry, leave):
+def dfs(edges, s, colors, entry, leave):
     time = 0
     stack = [s]
     while len(stack) > 0:
         v = stack.pop()
-        if processed[v] is None:
+        if colors[v] == Color.WHITE:
             entry[v] = time
-            processed[v] = False
+            colors[v] = Color.GRAY
             stack.append(v)
             time += 1
-            for w in sorted(edges[v], reverse=True):
-                if processed[w] is None:
+            for w in edges[v]:
+                if colors[w] == Color.WHITE:
                     stack.append(w)
-        elif processed[v] is False:
+        elif colors[v] == Color.GRAY:
             leave[v] = time
-            processed[v] = True
+            colors[v] = Color.BLACK
             time += 1
 
 
@@ -38,6 +45,8 @@ if __name__ == '__main__':
         u = int(line[0])
         v = int(line[1])
         edges[u].append(v)
+    for key in edges.keys():
+        edges[key].sort(reverse=True)
     entry, leave = main_dfs(edges, 1)
     for i in range(1, n + 1):
         print(entry[i], leave[i])
