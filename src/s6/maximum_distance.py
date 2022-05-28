@@ -2,22 +2,22 @@ import sys
 from collections import defaultdict
 
 
-def bfs(edges, n, s):
-    queue = [None] * n
-    count = 0
+def max_distance(edges, n, s):
     color = [False] * (n + 1)
+    distance = [0] * (n + 1)
     planned = []
     color[s] = True
+    distance[s] = 0
     planned.append(s)
     while len(planned) > 0:
         v = planned.pop(0)
-        queue[count] = v
-        count += 1
         for u in edges[v]:
             if not color[u]:
                 color[u] = True
+                distance[u] = distance[v] + 1
                 planned.append(u)
-    print(" ".join(map(str, queue[:count])))
+    max_dist = max(distance)
+    print(max_dist)
 
 
 if __name__ == '__main__':
@@ -31,7 +31,5 @@ if __name__ == '__main__':
         v = int(line[1])
         edges[u].append(v)
         edges[v].append(u)
-    for k in edges.keys():
-        edges[k].sort()
     s = int(sys.stdin.readline())
-    bfs(edges, n, s)
+    max_distance(edges, n, s)
