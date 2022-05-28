@@ -1,16 +1,12 @@
 from collections import defaultdict
 
 
-def main_dfs(edges, s):
-    processed = [None] * (n + 1)
-    return dfs(edges, s, processed)
-
-
 def print_res(res):
     print(" ".join(map(str, res)), end=" ")
 
 
-def dfs(edges, s, processed):
+def dfs(edges, s):
+    processed = [None] * (n + 1)
     result = []
     stack = [s]
     while len(stack) > 0:
@@ -39,5 +35,5 @@ if __name__ == '__main__':
         edges[u].append(v)
         edges[v].append(u)
     s = int(input())
-    result = main_dfs(edges, s)
+    result = dfs(edges, s)
     print_res(result)
