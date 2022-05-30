@@ -14,28 +14,27 @@ def init():
                 graph[city].append(target)
             else:
                 graph[target].append(city)
-    for k in graph.keys():
-        graph[k] = sorted(graph[k], reverse=True)
     return n, graph
 
 
 def is_optimal(graph, n):
-    railways = [None] * n
-    for i in range(n):
-        railways[i] = set()
-    for start in range(n):
-        visited = [False] * n
-        planned = [start]
-        visited[start] = True
-        while len(planned) > 0:
-            current = planned.pop()
-            if start in railways[current]:
-                return False
-            for end in graph[current]:
-                if not visited[end]:
-                    railways[start].add(end)
-                    planned.append(end)
-                    visited[end] = True
+    visited = ['W'] * n
+    for city in range(n):
+        if visited[city] != 'W':
+            continue
+        stack = [city]
+        while len(stack) > 0:
+            current = stack[-1]
+            if visited[current] == 'W':
+                visited[current] = 'G'
+                for target in graph[current]:
+                    if visited[target] == 'W':
+                        stack.append(target)
+                    elif visited[target] == 'G':
+                        return False
+            else:
+                visited[current] = 'B'
+                stack.pop()
     return True
 
 
