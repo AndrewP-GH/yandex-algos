@@ -22,7 +22,8 @@
 # В итоге ассимптотическая сложность будет: O(n + m + m*log(n)) = O(m*log(n))
 #
 # Алгоритм требует O(2*m) памяти для словаря с начальными данными, O(n) памяти для непосещенных вершин, O(m) памяти для
-#   кучи и O(m) памяти для остового дерева. Итоговая - O(n+m).
+#   кучи и O(m) памяти для остового дерева.
+# Итоговая - O(n+m).
 
 
 from __future__ import annotations
@@ -47,12 +48,11 @@ class MaxHeapObj(object):
 
 def init():
     line = stdin.readline().split()
-    n = int(line[0])
-    m = int(line[1])
+    n, m = map(int, line)
     graph = defaultdict(list)
     for _ in range(m):
         line = stdin.readline().split()
-        u, v, w = int(line[0]), int(line[1]), int(line[2])
+        u, v, w = map(int, line)
         graph[u].append((v, w))
         graph[v].append((u, w))
     return n, m, graph
@@ -65,14 +65,14 @@ def add_vertex(v: int, graph: dict, not_added: set, edges: [MaxHeapObj]):
             heapq.heappush(edges, MaxHeapObj(start=v, end=u, weight=w))
 
 
-def find_mst(n, m, graph) -> None | int | dict[tuple[int, int]: int]:
+def find_mst_weight(n, m, graph) -> None | int:
+    minimum_spanning_tree_weight = 0
     if m == 0:
         if n == 1:  # one node graph
-            return 1
+            return minimum_spanning_tree_weight
         else:
             return None
     not_added = set(graph.keys())
-    minimum_spanning_tree = {}
     edges_max_heap = []
 
     v = list(graph.keys())[0]
@@ -81,11 +81,11 @@ def find_mst(n, m, graph) -> None | int | dict[tuple[int, int]: int]:
         edge = extract_maximum(edges_max_heap)
         if edge.end in not_added:
             add_vertex(edge.end, graph, not_added, edges_max_heap)
-            minimum_spanning_tree[(edge.start, edge.end)] = edge.weight
+            minimum_spanning_tree_weight += edge.weight
     if len(not_added) > 0:
         return None
     else:
-        return minimum_spanning_tree
+        return minimum_spanning_tree_weight
 
 
 def extract_maximum(edges: [MaxHeapObj]):
@@ -93,13 +93,11 @@ def extract_maximum(edges: [MaxHeapObj]):
 
 
 def max_sum(n, m, graph):
-    result = find_mst(n, m, graph)
+    result = find_mst_weight(n, m, graph)
     if result is None:
         print("Oops! I did it again")
-    elif result == 1:
-        print(0)
     else:
-        print(sum(result.values()))
+        print(result)
 
 
 if __name__ == '__main__':
