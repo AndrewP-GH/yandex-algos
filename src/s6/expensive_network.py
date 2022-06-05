@@ -1,8 +1,8 @@
 # Отчет: https://contest.yandex.ru/contest/25070/run-report/68682843/
 #
 # Алгоритм работы:
-# 1. Создаем граф из всех вершин и всех ребер из входных данных. Для его хранения используется словарь
-#   вида {u: [(v, w)]}, где w - вес ребра (u, v). Для простоты поиска, ребро добавляется дважды как кортеж (u, v) и (v, y)
+# 1. Создаем граф из всех вершин и всех ребер из входных данных. Для его хранения используется массив списков
+#   вида array[u] = [(v, w)], где w - вес ребра (u, v). Для простоты поиска, ребро добавляется дважды как кортеж (u, v) и (v, y)
 # 2. Изначально считаем все вершины графа непосещенными
 # 3. Берем первую попавшуюся вершину из графа
 # 4. Удаляем ее из непосещенных и добавляем идущие из нее ребра в max-кучу (как критерий для сравнения используем вес
@@ -14,12 +14,16 @@
 #   иначе - возвращаем остовное дерево.
 #
 # Алгоритмическая сложность: n - количество вершин в графе, m - количество ребер в графе.
-# - суммарная вставка в словарь: O(m)
-# - суммарный проход по словарю и вставка ключей в set: O(m)
+# - суммарная вставка в конец списка в массиве списков: O(n + m)
+# - суммарный проход по массиву и пометка посещенных вершин в массиве: O(m)
 # - суммарное удаление вершины из посещенных и проверка, что ребро соединяет с непосещенной: O(n + m)
 # - суммарные вставки в бинарную кучу: O(m*log(n))
 # - просуммировать веса ребер остового дерева: O(m)
-# В итоге ассимптотическая сложность будет: O(n + m + m*log(n)) = O(m*log(n))
+# В итоге ассимптотическая сложность будет: O(n + m + m*log(n)) = O(m*log(n)).
+#
+# Данный алгоритм позволяет найти максимальное остовное дерево из заданного графа, т.к. при посещении вершины из нее
+#   выбирается ребро с максимальным весом, таким образом, если остовное дерево существует, оно будет состоять из
+#   ребер с максимальным из воможных весов, и тогда само дерево будет иметь масимальный вес.
 #
 # Алгоритм требует O(2*m) памяти для словаря с начальными данными, O(n) памяти для непосещенных вершин, O(m) памяти для
 #   кучи и O(m) памяти для остового дерева.
@@ -29,7 +33,6 @@
 from __future__ import annotations
 
 from sys import stdin
-from collections import defaultdict
 import heapq
 
 
@@ -49,19 +52,23 @@ class MaxHeapObj(object):
 def init():
     line = stdin.readline().split()
     n, m = map(int, line)
-    graph = defaultdict(list)
+    graph = [None] * (n + 1)
     for _ in range(m):
         line = stdin.readline().split()
         u, v, w = map(int, line)
+        if graph[u] is None:
+            graph[u] = []
         graph[u].append((v, w))
+        if graph[v] is None:
+            graph[v] = []
         graph[v].append((u, w))
     return n, m, graph
 
 
-def add_vertex(v: int, graph: dict, not_added: set, edges: [MaxHeapObj]):
-    not_added.remove(v)
+def add_vertex(v: int, graph: list, not_added: list, edges: [MaxHeapObj]):
+    not_added[v] = False
     for u, w in graph[v]:
-        if u in not_added:
+        if not_added[u]:
             heapq.heappush(edges, MaxHeapObj(start=v, end=u, weight=w))
 
 
@@ -72,17 +79,20 @@ def find_mst_weight(n, m, graph) -> None | int:
             return minimum_spanning_tree_weight
         else:
             return None
-    not_added = set(graph.keys())
+    not_added = [True] * (n+1)
+    not_added_count = n
     edges_max_heap = []
 
-    v = list(graph.keys())[0]
+    v = 1
     add_vertex(v, graph, not_added, edges_max_heap)
-    while len(not_added) > 0 and len(edges_max_heap) > 0:
+    not_added_count -= 1
+    while not_added_count > 0 and len(edges_max_heap) > 0:
         edge = extract_maximum(edges_max_heap)
-        if edge.end in not_added:
+        if not_added[edge.end]:
             add_vertex(edge.end, graph, not_added, edges_max_heap)
+            not_added_count -= 1
             minimum_spanning_tree_weight += edge.weight
-    if len(not_added) > 0:
+    if not_added_count > 0:
         return None
     else:
         return minimum_spanning_tree_weight
