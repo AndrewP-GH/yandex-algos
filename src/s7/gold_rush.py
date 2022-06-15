@@ -11,12 +11,8 @@ def gold_rush(pack, n, values):
             pack -= m
             gain += c * m
         else:
-            while m > 0:
-                if pack == 0:
-                    return gain
-                pack -= 1
-                gain += c
-                m -= 1
+            gain += c * pack
+            pack = 0
         i += 1
     return gain
 
