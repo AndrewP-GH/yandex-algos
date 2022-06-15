@@ -5,7 +5,7 @@ def flowers_field(n, m, field):
         for j in range(1, m + 1):
             dp[i][j] = field[i][j - 1] + max(dp[i][j - 1], dp[i + 1][j])
     path = find_path(n, m, dp)
-    return dp[0][m], path
+    return dp[0][m], "".join(reversed(path))
 
 
 def find_path(n, m, dp):
@@ -14,14 +14,16 @@ def find_path(n, m, dp):
     for i in range(n):
         j = max_right
         while j > 0:
-            if dp[i][j - 1] > dp[i + 1][j]:
+            if i == n - 1 and j == 1:
+                return path
+            if dp[i][j - 1] >= dp[i + 1][j] and j > 1:
                 path.append('R')
-            elif dp[i][j - 1] < dp[i + 1][j]:
+            else:
                 path.append('U')
+                max_right = j
                 break
-            j += -1
-    path.reverse()
-    return "".join(path)
+            j -= 1
+    return path
 
 
 if __name__ == '__main__':
