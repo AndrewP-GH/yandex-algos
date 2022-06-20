@@ -1,4 +1,4 @@
-# Отчет 69049769: https://contest.yandex.ru/contest/25597/run-report/69049769/
+# Отчет 69061090: https://contest.yandex.ru/contest/25597/run-report/69061090/
 # Алгоритм работы:
 #   Задача представляет собой вариацию задачи о рюкзаке, где необходимо проверить, можно ли добиться максимального веса
 # из предложенных вещей.
@@ -32,27 +32,21 @@ def same_amounts(numbers: [int]) -> bool:
     if total % 2 != 0:
         return False
     target = total // 2
-    row_width = target + 1
-    dp = [[False] * row_width for _ in range(2)]
-    current_row = 1
-    previous_row = 0
+    dp = [False] * (target + 1)
     for number in numbers:
-        for sub_sum in range(row_width):
-            if sub_sum < number:
-                dp[current_row][sub_sum] = dp[previous_row][sub_sum]
+        for sub_sum in range(target, 0, -1):
+            if sub_sum > number:
+                dp[sub_sum] = dp[sub_sum] or dp[sub_sum - number]
             elif sub_sum == number:
-                dp[current_row][sub_sum] = True
-            else:
-                dp[current_row][sub_sum] = dp[previous_row][sub_sum] or dp[previous_row][sub_sum - number]
-        if dp[current_row][target]:
+                dp[sub_sum] = True
+        if dp[target]:
             return True
-        current_row, previous_row = current_row ^ 1, current_row
     return False
 
 
 if __name__ == '__main__':
     _n = sys.stdin.readline()
-    _numbers = [int(x) for x in sys.stdin.readline().split()]
+    _numbers = [*map(int, sys.stdin.readline().split())]
     _res = same_amounts(_numbers)
     print(_res)
 
