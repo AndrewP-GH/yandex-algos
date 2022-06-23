@@ -51,32 +51,32 @@ if __name__ == '__main__':
 
 
 class TestPackedPrefix(unittest.TestCase):
-    def test_build_line_1(self):
+    def test_unpack_line_1(self):
         line = '2[a]2[ab]'
         exp = 'aaabab'
         self.assertEqual(unpack(line), exp)
 
-    def test_build_line_2(self):
+    def test_unpack_line_2(self):
         line = '3[a]2[r2[t]]'
         exp = 'aaarttrtt'
         self.assertEqual(unpack(line), exp)
 
-    def test_build_line_3(self):
+    def test_unpack_line_3(self):
         line = 'a2[aa3[b]]'
         exp = 'aaabbbaabbb'
         self.assertEqual(unpack(line), exp)
 
-    def test_build_line_4(self):
+    def test_unpack_line_4(self):
         line = '2[abac]a'
         exp = 'abacabaca'
         self.assertEqual(unpack(line), exp)
 
-    def test_build_line_5(self):
+    def test_unpack_line_5(self):
         line = '3[aba]'
         exp = 'abaabaaba'
         self.assertEqual(unpack(line), exp)
 
-    def test_build_line_6(self):
+    def test_unpack_line_6(self):
         line = '3[aba]c'
         exp = 'abaabaabac'
         self.assertEqual(unpack(line), exp)
