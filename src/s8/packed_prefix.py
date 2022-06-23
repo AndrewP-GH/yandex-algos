@@ -3,7 +3,7 @@ import unittest
 
 
 def packed_prefix(n, lines):
-    result = ''
+    result = ""
     for i in range(len(lines[0])):
         ch = lines[0][i]
         for j in range(1, n):
@@ -17,15 +17,13 @@ def packed_prefix(n, lines):
 def unpack(line):
     stack = []
     i = 0
-    brackets = 0
     while i < len(line):
         ch = line[i]
         if ch == '[':
-            brackets += 1
+            pass
         elif ch == ']':
-            brackets -= 1
             top = stack.pop()
-            local = ''
+            local = ""
             while not top.isnumeric():
                 local = top + local
                 top = stack.pop()
@@ -35,7 +33,7 @@ def unpack(line):
             stack.append(ch)
         i += 1
 
-    result = ''
+    result = ""
     while len(stack) > 0:
         result = stack.pop() + result
     return result
