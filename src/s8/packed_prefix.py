@@ -19,9 +19,7 @@ def unpack(line):
     i = 0
     while i < len(line):
         ch = line[i]
-        if ch == '[':
-            pass
-        elif ch == ']':
+        if ch == ']':
             top = stack.pop()
             local = ""
             while not top.isnumeric():
@@ -29,7 +27,7 @@ def unpack(line):
                 top = stack.pop()
             local = int(top) * local
             stack.append(local)
-        else:
+        elif ch != '[':
             stack.append(ch)
         i += 1
 
