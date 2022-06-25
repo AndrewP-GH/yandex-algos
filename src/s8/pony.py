@@ -2,31 +2,32 @@ import sys
 import unittest
 
 end_word_marker = '$'
+possible_ways = {}
 
 
 def is_pony(string: str, words: [str]) -> bool:
     tree = build_prefix_tree(words)
-    return check_string(string, tree)
+    return check_string(string, tree, 0)
 
 
-def check_string(string: str, tree: dict) -> bool:
+def check_string(string: str, tree: dict, shift: int) -> bool:
     node = tree
     i = 0
     len_s = len(string)
-    possible_ways = []
     while i < len_s:
         letter = string[i]
         if letter not in node:
             break
         if end_word_marker in node[letter]:
-            possible_ways.append(i)
+            possible_ways[i + 1 + shift] = shift
         node = node[letter]
         i += 1
     if i == len_s and end_word_marker in node:
         return True
     while len(possible_ways) > 0:
-        i = possible_ways.pop()
-        if check_string(string[i + 1:], tree):
+        pos = next(iter(possible_ways))
+        sh = possible_ways.pop(pos)
+        if check_string(string[pos - sh:], tree, sh):
             return True
     return False
 
@@ -70,4 +71,28 @@ class IsPonyTest(unittest.TestCase):
         t = 'abacaba'
         words = ['abac', 'caba', 'aba']
         exp = True
+        self.assertEqual(is_pony(t, words), exp)
+
+    def test_4(self):
+        t = 'sscevscescescscsscevscevscesscsc'
+        words = ['sce', 's', 'scev', 'sc']
+        exp = True
+        self.assertEqual(is_pony(t, words), exp)
+
+    def test_5(self):
+        t = 'axymaxymaxyaxymaxyaxymaxymaxax'
+        words = ['axy', 'axym', 'ax', 'a']
+        exp = True
+        self.assertEqual(is_pony(t, words), exp)
+
+    def test_6(self):
+        t = 'hfbfhfbfhfbfhhfbfhfbhfbhhhhfhfbf'
+        words = ['hfb', 'hf', 'hfbf', 'h']
+        exp = True
+        self.assertEqual(is_pony(t, words), exp)
+
+    def test_7(self):
+        t = 'bwvfbtrjqpbwvfbbwvbwbbwbbwvbwvf'
+        words = ['bwvf', 'b', 'bw', 'bwv']
+        exp = False
         self.assertEqual(is_pony(t, words), exp)
