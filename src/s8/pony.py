@@ -8,8 +8,7 @@ def is_pony(string: str, words: [str]) -> bool:
     possible_ways = set()
     possible_ways.add(0)
     while len(possible_ways) > 0:
-        pos = next(iter(possible_ways))
-        possible_ways.remove(pos)
+        pos = possible_ways.pop()
         if check_string(string[pos:], tree, end_word_marker, pos, possible_ways):
             return True
     return False
