@@ -1,22 +1,42 @@
+import collections
 import sys
 import unittest
+
+
+class State:
+    def __init__(self):
+        self._queue = collections.deque()
+        self._possible_ways = set()
+
+    def add(self, way: int):
+        if way not in self._possible_ways:
+            self._possible_ways.add(way)
+            self._queue.append(way)
+
+    def move_next(self) -> bool:
+        return len(self._possible_ways) > 0
+
+    def current(self) -> int:
+        way = self._queue.popleft()
+        self._possible_ways.remove(way)
+        return way
 
 
 def is_pony(string: str, words: [str]) -> bool:
     end_word_marker = '$'
     tree = build_prefix_tree(words, end_word_marker)
-    possible_ways = set()
-    possible_ways.add(0)
-    while len(possible_ways) > 0:
-        pos = possible_ways.pop()
-        if check_string(string[pos:], tree, end_word_marker, pos, possible_ways):
+    state = State()
+    state.add(0)
+    while state.move_next():
+        start = state.current()
+        if check_string(string, tree, end_word_marker, start, state):
             return True
     return False
 
 
-def check_string(string: str, tree: dict, end_word_marker: str, shift: int, possible_ways: set) -> bool:
+def check_string(string: str, tree: dict, end_word_marker: str, start: int, state: State) -> bool:
     node = tree
-    i = 0
+    i = start
     len_s = len(string)
     while i < len_s:
         letter = string[i]
@@ -27,8 +47,8 @@ def check_string(string: str, tree: dict, end_word_marker: str, shift: int, poss
         if end_word_marker in node \
                 and next_index < len_s \
                 and string[next_index] in tree:
-            possible_way = next_index + shift
-            possible_ways.add(possible_way)
+            possible_way = next_index
+            state.add(possible_way)
         i = next_index
     return end_word_marker in node
 
