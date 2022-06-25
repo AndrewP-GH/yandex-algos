@@ -1,23 +1,23 @@
-import collections
+from queue import PriorityQueue
 import sys
 import unittest
 
 
 class State:
     def __init__(self):
-        self._queue = collections.deque()
+        self._queue = PriorityQueue()
         self._possible_ways = set()
 
     def add(self, way: int):
         if way not in self._possible_ways:
             self._possible_ways.add(way)
-            self._queue.append(way)
+            self._queue.put(way)
 
     def move_next(self) -> bool:
         return len(self._possible_ways) > 0
 
     def current(self) -> int:
-        way = self._queue.popleft()
+        way = self._queue.get()
         self._possible_ways.remove(way)
         return way
 
