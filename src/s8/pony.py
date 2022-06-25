@@ -2,37 +2,37 @@ import sys
 import unittest
 
 end_word_marker = '$'
-possible_ways = set()
 
 
 def is_pony(string: str, words: [str]) -> bool:
     tree = build_prefix_tree(words)
-    return check_string(string, string, tree, 0)
+    possible_ways = set()
+    possible_ways.add(0)
+    while len(possible_ways) > 0:
+        pos = next(iter(possible_ways))
+        possible_ways.remove(pos)
+        if check_string(string[pos:], tree, pos, possible_ways):
+            return True
+    return False
 
 
-def check_string(string: str, sub_string: str, tree: dict, shift: int) -> bool:
+def check_string(string: str, tree: dict, shift: int, possible_ways: set) -> bool:
     node = tree
     i = 0
-    len_s = len(sub_string)
+    len_s = len(string)
     while i < len_s:
-        letter = sub_string[i]
+        letter = string[i]
         if letter not in node:
             break
         next_index = i + 1
         if end_word_marker in node[letter] \
                 and next_index < len_s \
-                and sub_string[next_index] in tree:
-            possible_ways.add(next_index + shift)
+                and string[next_index] in tree:
+            possible_way = next_index + shift
+            possible_ways.add(possible_way)
         node = node[letter]
         i = next_index
-    if i == len_s and end_word_marker in node:
-        return True
-    while len(possible_ways) > 0:
-        pos = next(iter(possible_ways))
-        possible_ways.remove(pos)
-        if check_string(string, string[pos:], tree, pos):
-            return True
-    return False
+    return i == len_s and end_word_marker in node
 
 
 def build_prefix_tree(words: [str]) -> dict:
