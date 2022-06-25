@@ -20,17 +20,17 @@ def check_string(string: str, tree: dict, end_word_marker: str, shift: int, poss
     len_s = len(string)
     while i < len_s:
         letter = string[i]
-        if letter not in node:
-            break
+        node = node.get(letter)
+        if node is None:
+            return False
         next_index = i + 1
-        if end_word_marker in node[letter] \
+        if end_word_marker in node \
                 and next_index < len_s \
                 and string[next_index] in tree:
             possible_way = next_index + shift
             possible_ways.add(possible_way)
-        node = node[letter]
         i = next_index
-    return i == len_s and end_word_marker in node
+    return end_word_marker in node
 
 
 def build_prefix_tree(words: [str], end_word_marker: str) -> dict:
