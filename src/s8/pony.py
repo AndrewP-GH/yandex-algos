@@ -18,16 +18,19 @@ def check_string(string: str, tree: dict, shift: int) -> bool:
         letter = string[i]
         if letter not in node:
             break
-        if end_word_marker in node[letter]:
-            possible_ways[i + 1 + shift] = shift
+        next_index = i + 1
+        if end_word_marker in node[letter] \
+                and next_index < len_s \
+                and string[next_index] in tree:
+            possible_ways[next_index + shift] = shift
         node = node[letter]
-        i += 1
+        i = next_index
     if i == len_s and end_word_marker in node:
         return True
     while len(possible_ways) > 0:
         pos = next(iter(possible_ways))
         sh = possible_ways.pop(pos)
-        if check_string(string[pos - sh:], tree, sh):
+        if check_string(string[(pos - sh):], tree, sh):
             return True
     return False
 
