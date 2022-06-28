@@ -2,6 +2,8 @@ from queue import PriorityQueue
 import sys
 import unittest
 
+end_word_marker = '$'
+
 
 class State:
     def __init__(self):
@@ -22,19 +24,17 @@ class State:
         return way
 
 
-def is_pony(string: str, words: [str]) -> bool:
-    end_word_marker = '$'
-    tree = build_prefix_tree(words, end_word_marker)
+def is_pony(string: str, bor: {}) -> bool:
     state = State()
     state.add(0)
     while state.move_next():
         start = state.current()
-        if check_string(string, tree, end_word_marker, start, state):
+        if check_string(string, bor, start, state):
             return True
     return False
 
 
-def check_string(string: str, tree: dict, end_word_marker: str, start: int, state: State) -> bool:
+def check_string(string: str, tree: dict, start: int, state: State) -> bool:
     node = tree
     i = start
     len_s = len(string)
@@ -53,27 +53,24 @@ def check_string(string: str, tree: dict, end_word_marker: str, start: int, stat
     return end_word_marker in node
 
 
-def build_prefix_tree(words: [str], end_word_marker: str) -> dict:
-    tree = {}
-    for word in words:
-        node = tree
-        for letter in word:
-            if letter == '\n':
-                continue
-            if letter not in node:
-                node[letter] = {}
-            node = node[letter]
-        node[end_word_marker] = True
-    return tree
+def add_word(tree: {}, word: str):
+    node = tree
+    for letter in word:
+        if letter == '\n':
+            continue
+        if letter not in node:
+            node[letter] = {}
+        node = node[letter]
+    node[end_word_marker] = True
 
 
 if __name__ == '__main__':
     _t = sys.stdin.readline().rstrip()
     _n = int(input())
-    _words = [None] * _n
-    for _i in range(_n):
-        _words[_i] = sys.stdin.readline()
-    _result = is_pony(_t, _words)
+    _bor = {}
+    for _ in range(_n):
+        add_word(_bor, sys.stdin.readline())
+    _result = is_pony(_t, _bor)
     print('YES' if _result else 'NO')
 
 
@@ -81,41 +78,62 @@ class IsPonyTest(unittest.TestCase):
     def test_1(self):
         t = 'examiwillpasstheexam'
         words = ['will', 'pass', 'the', 'exam', 'i']
+        bor = {}
+        for word in words:
+            add_word(bor, word)
         exp = True
-        self.assertEqual(is_pony(t, words), exp)
+        self.assertEqual(is_pony(t, bor), exp)
 
     def test_2(self):
         t = 'abacaba'
         words = ['abac', 'caba']
+        bor = {}
+        for word in words:
+            add_word(bor, word)
         exp = False
-        self.assertEqual(is_pony(t, words), exp)
+        self.assertEqual(is_pony(t, bor), exp)
 
     def test_3(self):
         t = 'abacaba'
         words = ['abac', 'caba', 'aba']
+        bor = {}
+        for word in words:
+            add_word(bor, word)
         exp = True
-        self.assertEqual(is_pony(t, words), exp)
+        self.assertEqual(is_pony(t, bor), exp)
 
     def test_4(self):
         t = 'sscevscescescscsscevscevscesscsc'
         words = ['sce', 's', 'scev', 'sc']
+        bor = {}
+        for word in words:
+            add_word(bor, word)
         exp = True
-        self.assertEqual(is_pony(t, words), exp)
+        self.assertEqual(is_pony(t, bor), exp)
 
     def test_5(self):
         t = 'axymaxymaxyaxymaxyaxymaxymaxax'
         words = ['axy', 'axym', 'ax', 'a']
+        bor = {}
+        for word in words:
+            add_word(bor, word)
         exp = True
-        self.assertEqual(is_pony(t, words), exp)
+        self.assertEqual(is_pony(t, bor), exp)
 
     def test_6(self):
         t = 'hfbfhfbfhfbfhhfbfhfbhfbhhhhfhfbf'
         words = ['hfb', 'hf', 'hfbf', 'h']
+        bor = {}
+        for word in words:
+            add_word(bor, word)
         exp = True
-        self.assertEqual(is_pony(t, words), exp)
+        self.assertEqual(is_pony(t, bor), exp)
 
     def test_7(self):
         t = 'bwvfbtrjqpbwvfbbwvbwbbwbbwvbwvf'
         words = ['bwvf', 'b', 'bw', 'bwv']
+        bor = {}
+        for word in words:
+            add_word(bor, word)
         exp = False
-        self.assertEqual(is_pony(t, words), exp)
+        self.assertEqual(is_pony(t, bor), exp)
