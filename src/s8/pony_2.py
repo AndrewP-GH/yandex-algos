@@ -9,23 +9,16 @@ def is_pony(string: str, bor: {}) -> bool:
     dp = [False] * (l_s + 1)
     dp[0] = True
     for i in range(l_s):
-        letter = string[i]
-        node = bor.get(letter)
-        if node is None:
-            continue
         j = i
-        node = bor
         while j >= 0:
             letter = string[j]
-            node = node.get(letter)
-            if node is not None:
-                if end_word_marker in node and dp[j]:
-                    dp[i + 1] = True
-                    break
-                j -= 1
-            else:
+            node = bor.get(letter) if i == j else node.get(letter)
+            if node is None:
                 break
-
+            if end_word_marker in node and dp[j]:
+                dp[i + 1] = True
+                break
+            j -= 1
     return dp[l_s]
 
 
