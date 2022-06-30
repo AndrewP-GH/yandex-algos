@@ -33,9 +33,10 @@ def is_pony(string: str, bor: {}) -> bool:
     dp[0] = True
     for i in range(l_s):
         j = i
+        node = bor
         while j >= 0:
             letter = string[j]
-            node = bor.get(letter) if i == j else node.get(letter)
+            node = node.get(letter)
             if node is None:
                 break
             if end_word_marker in node and dp[j]:

@@ -1,4 +1,4 @@
-# Отчет: 69172295 https://contest.yandex.ru/contest/26133/run-report/69172295/
+# Отчет: 69250190 https://contest.yandex.ru/contest/26133/run-report/69250190/
 # Алгоритм работы:
 # 1. Распакаовка строк
 # 2. Поиск максимального префикса
@@ -27,15 +27,14 @@ import unittest
 
 
 def packed_prefix(n, lines):
-    result = ""
-    for i in range(len(lines[0])):
-        ch = lines[0][i]
+    template = lines[0]
+    for i in range(len(template)):
+        ch = template[i]
         for j in range(1, n):
             line = lines[j]
             if i > len(line) or line[i] != ch:
-                return result
-        result += ch
-    return result
+                return template[:i]
+    return template
 
 
 def unpack(line):
