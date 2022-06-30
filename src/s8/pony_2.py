@@ -1,6 +1,6 @@
-# Отчет 69245683: https://contest.yandex.ru/contest/26133/run-report/69245683/
+# Отчет 69255175: https://contest.yandex.ru/contest/26133/run-report/69255175/
 # Алгоритм работы:
-# 1. Читать слово и добавлять его в бор (префиксное дерево) задом наперёд. За узел дерева берем словарь,
+# 1. Читать слово и добавлять его в бор (префиксное дерево). За узел дерева берем словарь,
 #   а в нём помещаем в ключе end_word_marker значение True, если данное слово заканчивается в текущем узле дерева.
 # 2. Воспользуемся динамическим программированием для проверки, можно ли составить слово из тех, что у нас в боре.
 #   Заведем булевый массив dp длины n=len(проверяемая_строка)+1. В нём будем хранить информацию о том, можно ли
@@ -8,9 +8,9 @@
 #   подстроку [0, i) можно составить из слов в боре.
 # 3. Тогда ответ для всей строки будет в dp[n]. Чтобы вычислить все значения в массиве dp, будем идти по исходной строке
 #   слева направо. Для каждого символа в строке будем проверять, находится ли он в руте бора, и если да, проверяем
-#   символы перед ним j = (i-1, i-2, ..., 0), есть ли они далее в боре.
+#   последующие символы j = (i+1, i+2, ...), есть ли они далее в боре.
 # 4. Если при этом мы встречаем узел, в котором находится символ конца слова, проверяем, есть ли в массиве dp значение
-#   True для индекса j текущей буквы в слова. Если да, то мы можем построить слово. Если нет, то мы проверяем подстроку
+#   True для индекса i текущей буквы в слове. Если да, то мы можем построить слово. Если нет, то мы проверяем подстроку
 #   дальше.
 #
 # Cложность алгоритма:
@@ -34,21 +34,22 @@ def is_pony(string: str, bor: {}) -> bool:
     for i in range(l_s):
         j = i
         node = bor
-        while j >= 0:
+        while j < l_s:
             letter = string[j]
             node = node.get(letter)
             if node is None:
                 break
-            if end_word_marker in node and dp[j]:
-                dp[i + 1] = True
-                break
-            j -= 1
+            if end_word_marker in node and dp[i]:
+                dp[j + 1] = True
+            if dp[l_s]:
+                return True
+            j += 1
     return dp[l_s]
 
 
 def add_word(bor: {}, word: str):
     node = bor
-    for letter in reversed(word):
+    for letter in word:
         if letter == '\n':
             continue
         if letter not in node:
@@ -129,4 +130,13 @@ class IsPonyTest(unittest.TestCase):
         for word in words:
             add_word(bor, word)
         exp = False
+        self.assertEqual(is_pony(t, bor), exp)
+
+    def test_8(self):
+        t = 'aaaab'
+        words = ['a', 'aa', 'aaa', 'aab']
+        bor = {}
+        for word in words:
+            add_word(bor, word)
+        exp = True
         self.assertEqual(is_pony(t, bor), exp)
