@@ -44,7 +44,7 @@ def is_pony(string: str, bor: {}) -> bool:
             if dp[l_s]:
                 return True
             j += 1
-    return dp[l_s]
+    return False
 
 
 def add_word(bor: {}, word: str):
